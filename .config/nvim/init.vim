@@ -22,13 +22,16 @@ call plug#end()
 let mapleader = "\<Space>"
 
 " Split edit your vimrc. Type space, v, r in sequence to trigger
-nmap <leader>vr :sp $MYVIMRC<cr>
+nmap <leader>ce :e $MYVIMRC<cr>
 
 " Source (reload) your vimrc. Type space, s, o in sequence to trigger
-nmap <leader>so :source $MYVIMRC<cr>
+nmap <leader>co :source $MYVIMRC<cr>
 
 " Source Vim configuration file and install plugins
 nnoremap <silent><leader>1 :source $MYVIMRC \| :PlugInstall<CR>
+
+" Constructor surround
+nmap <leader>sc ms"sdaw"Sda(i(<C-r>s)<esc>`s
 
 " Common mappings
 nmap <CR> :set paste<CR>o<Esc>:set paste<CR> 
