@@ -15,8 +15,19 @@ Plug 'asvetliakov/vim-easymotion', Cond(exists('g:vscode'), { 'as': 'vsc-easymot
 Plug 'wellle/targets.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
+Plug 'drewtempelmeyer/palenight.vim'
 
 call plug#end()
+
+" Theme
+set background=dark
+colorscheme palenight
+
+if (has("termguicolors"))
+  set termguicolors
+endif
+
+hi CocErrorFloat guifg=#f84850
 
 "Leadder mapping
 let mapleader = "\<Space>"
@@ -104,8 +115,9 @@ command! -bang Only if <q-bang> == '!' | call <SID>closeOtherEditors() | else | 
 
 " Basic
 set incsearch
-set number
 set ignorecase
+set number relativenumber
+set nu rnu
 
 " easymotion
 nmap <leader>w <Plug>(easymotion-bd-w)
@@ -123,6 +135,7 @@ xnoremap <silent> <C-h> :call VSCodeNotify('workbench.action.navigateLeft')<CR>
 nnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
 xnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
 nnoremap <silent> ge :call VSCodeNotify('editor.action.marker.nextInFiles')<CR>
+nnoremap <silent> gi :call VSCodeNotify('editor.action.goToImplementation')<CR>
 
 nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
 
