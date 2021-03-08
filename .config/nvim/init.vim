@@ -35,7 +35,7 @@ let mapleader = "\<Space>"
 " Split edit your vimrc. Type space, v, r in sequence to trigger
 nmap <leader>ce :e $MYVIMRC<cr>
 
-" Source (reload) your vimrc. Type space, s, o in sequence to trigger
+" Source (reload) your vimrc. Type space, c, o in sequence to trigger
 nmap <leader>co :source $MYVIMRC<cr>
 
 " Source Vim configuration file and install plugins
@@ -124,7 +124,18 @@ nmap <leader>w <Plug>(easymotion-bd-w)
 nmap <leader>f <Plug>(easymotion-bd-f)
 nmap <leader>t <Plug>(easymotion-bd-t)
 nmap <leader>F <Plug>(easymotion-bd-f2)
+nmap <leader>e <Plug>(easymotion-bd-e)
 
+
+
+
+
+xmap gc  <Plug>VSCodeCommentary
+nmap gc  <Plug>VSCodeCommentary
+omap gc  <Plug>VSCodeCommentary
+nmap gcc <Plug>VSCodeCommentaryLine
+
+"if exists('g:vscode')
 " Better Navigation
 nnoremap <silent> <C-j> :call VSCodeNotify('workbench.action.navigateDown')<CR>
 xnoremap <silent> <C-j> :call VSCodeNotify('workbench.action.navigateDown')<CR>
@@ -135,7 +146,7 @@ xnoremap <silent> <C-h> :call VSCodeNotify('workbench.action.navigateLeft')<CR>
 nnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
 xnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
 nnoremap <silent> ge :call VSCodeNotify('editor.action.marker.nextInFiles')<CR>
-nnoremap <silent> gi :call VSCodeNotify('editor.action.goToImplementation')<CR>
+nnoremap <silent> gI :call VSCodeNotify('editor.action.goToImplementation')<CR>
 
 nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
 
@@ -143,9 +154,5 @@ nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
 xnoremap <expr> <C-/> <SID>vscodeCommentary()
 nnoremap <expr> <C-/> <SID>vscodeCommentary() . '_'
 
-" xnoremap <silent> <C-P> :<C-u>call <SID>openVSCodeCommandsInVisualMode()<CR>
-
-xmap gc  <Plug>VSCodeCommentary
-nmap gc  <Plug>VSCodeCommentary
-omap gc  <Plug>VSCodeCommentary
-nmap gcc <Plug>VSCodeCommentaryLine
+	" xnoremap <silent> <C-P> :<C-u>call <SID>openVSCodeCommandsInVisualMode()<CR>
+"endif
