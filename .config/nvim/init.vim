@@ -3,7 +3,7 @@ function! Cond(Cond, ...)
 	return a:Cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
 
-let g:coc_global_extensions = [ 'coc-tsserver' ]
+let g:coc_global_extensions = [ 'coc-tsserver', 'coc-sh' ]
     
 call plug#begin(stdpath('data') . '/plugged')
 
@@ -126,16 +126,12 @@ nmap <leader>t <Plug>(easymotion-bd-t)
 nmap <leader>F <Plug>(easymotion-bd-f2)
 nmap <leader>e <Plug>(easymotion-bd-e)
 
-
-
-
-
 xmap gc  <Plug>VSCodeCommentary
 nmap gc  <Plug>VSCodeCommentary
 omap gc  <Plug>VSCodeCommentary
 nmap gcc <Plug>VSCodeCommentaryLine
 
-"if exists('g:vscode')
+if exists('g:vscode')
 " Better Navigation
 nnoremap <silent> <C-j> :call VSCodeNotify('workbench.action.navigateDown')<CR>
 xnoremap <silent> <C-j> :call VSCodeNotify('workbench.action.navigateDown')<CR>
@@ -153,6 +149,7 @@ nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
 " Bind C-/ to vscode commentary since calling from vscode produces double comments due to multiple cursors
 xnoremap <expr> <C-/> <SID>vscodeCommentary()
 nnoremap <expr> <C-/> <SID>vscodeCommentary() . '_'
-
 	" xnoremap <silent> <C-P> :<C-u>call <SID>openVSCodeCommandsInVisualMode()<CR>
-"endif
+endif
+
+set clipboard+=unnamedplus

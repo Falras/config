@@ -66,14 +66,6 @@ else
  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w$(parse_git_branch)\$ '
 fi
 
-# Default config
-#if [ "$color_prompt" = yes ]; then
-#    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-#else
-#    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-#fi
-# unset color_prompt force_color_prompt
-
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
@@ -116,6 +108,10 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+if [ -f ~/.local_bashrc ]; then
+    . ~/.local_bashrc 
+fi
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -127,19 +123,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH=/home/linuxbrew/.linuxbrew/bin:~/.npm-global/bin:$PATH
-# export DIT_RESOURCES_PATH=/home/farlas/Projects/CS9-MasterDataImport/resources
-# export DIT_RESOURCES_DATA=/home/farlas/Projects/CS9-MasterDataImport/resources/data
-# export DIT_RESOURCES_ARCHIVES=/home/farlas/Projects/CS9-MasterDataImport/resources/archives
-# export DIT_HTTP_DOCUMENTROOT=/home/farlas/Projects/CS9-MasterDataImport/static
-export DIT_PROJECTROOT=/home/farlas/Projects/CS9-MasterDataImport/
-export MDIMPORT_PROJECTROOT=/home/farlas/Projects/CS9-MasterDataImport/
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-nvm use 12 1>/dev/null
+nvm use lts/* 1>/dev/null
 
 alias config='/usr/bin/git --git-dir=/home/farlas/.cfg/ --work-tree=/home/farlas'
 # swap esc with caps lock
