@@ -143,6 +143,7 @@ nnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
 xnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
 nnoremap <silent> ge :call VSCodeNotify('editor.action.marker.nextInFiles')<CR>
 nnoremap <silent> gI :call VSCodeNotify('editor.action.goToImplementation')<CR>
+nnoremap <silent> gf :call VSCodeNotify('editor.action.openLink')<CR>
 
 nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
 
