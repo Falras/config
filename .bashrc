@@ -129,3 +129,6 @@ source /usr/share/nvm/init-nvm.sh
 nvm use --lts 1>/dev/null
 
 alias config='/usr/bin/git --git-dir=/home/farlas/.cfg/ --work-tree=/home/farlas'
+. "$HOME/.cargo/env"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

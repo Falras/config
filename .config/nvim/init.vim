@@ -1,10 +1,10 @@
 function! Cond(Cond, ...)
-	let opts = get(a:000, 0, {})
-	return a:Cond ? opts : extend(opts, { 'on': [], 'for': [] })
+		let opts = get(a:000, 0, {})
+		return a:Cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
 
 let g:coc_global_extensions = [ 'coc-tsserver', 'coc-sh' ]
-    
+
 call plug#begin(stdpath('data') . '/plugged')
 
 Plug 'tpope/vim-surround'
@@ -12,19 +12,35 @@ Plug 'tpope/vim-repeat'
 Plug 'svermeulen/vim-subversive'
 Plug 'easymotion/vim-easymotion', Cond(!exists('g:vscode'))
 Plug 'asvetliakov/vim-easymotion', Cond(exists('g:vscode'), { 'as': 'vsc-easymotion' })
+Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'wellle/targets.vim'
 Plug 'leafgarland/typescript-vim'
+Plug 'preservim/nerdtree'
+Plug 'preservim/nerdcommenter'
+Plug 'dracula/vim'
+Plug 'junegunn/fzf'
+
 Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
-Plug 'drewtempelmeyer/palenight.vim'
+"Dart/Flutter
+" Plug 'dart-lang/dart-vim-plugin'
+" Plug 'thosakwe/vim-flutter'
+" Plug 'natebosch/vim-lsc'
+" Plug 'natebosch/vim-lsc-dart'
+" Dart/Flutter 2 option
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'mattn/vim-lsp-settings'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
+" Flutter 3
+" Plug 'nvim-lua/plenary.nvim'
+" Plug 'stevearc/dressing.nvim' " optional for vim.ui.select
+" Plug 'akinsho/flutter-tools.nvim'
 
 call plug#end()
 
-" Theme
-set background=dark
-colorscheme palenight
-
+colorscheme dracula
 if (has("termguicolors"))
-  set termguicolors
+		set termguicolors
 endif
 
 hi CocErrorFloat guifg=#f84850
@@ -33,7 +49,7 @@ hi CocErrorFloat guifg=#f84850
 let mapleader = "\<Space>"
 
 " Split edit your vimrc. Type space, v, r in sequence to trigger
-nmap <leader>ce :e $MYVIMRC<cr>
+nmap <leader>ce :tabnew $MYVIMRC<cr>
 
 " Source (reload) your vimrc. Type space, c, o in sequence to trigger
 nmap <leader>co :source $MYVIMRC<cr>
@@ -52,70 +68,82 @@ nmap s <plug>(SubversiveSubstitute)
 nmap ss <plug>(SubversiveSubstituteLine)
 nmap S <plug>(SubversiveSubstituteToEndOfLine)
 
-"VSCodo
-function! s:split(...) abort
-    let direction = a:1
-    let file = a:2
-    call VSCodeCall(direction == 'h' ? 'workbench.action.splitEditorDown' : 'workbench.action.splitEditorRight')
-    if file != ''
-        call VSCodeExtensionNotify('open-file', expand(file), 'all')
-    endif
-endfunction
+autocmd VimEnter *  RainbowParentheses 
 
-function! s:splitNew(...)
-    let file = a:2
-    call s:split(a:1, file == '' ? '__vscode_new__' : file)
-endfunction
 
-function! s:closeOtherEditors()
-    call VSCodeNotify('workbench.action.closeEditorsInOtherGroups')
-    call VSCodeNotify('workbench.action.closeOtherEditors')
-endfunction
+"VSCode
+if filereadable("~/.config/nvim/vscode.vim")
+	source ~/.config/nvim/vscode.vim
+endif
 
-function! s:manageEditorSize(...)
-    let count = a:1
-    let to = a:2
-    for i in range(1, count ? count : 1)
-        call VSCodeNotify(to == 'increase' ? 'workbench.action.increaseViewSize' : 'workbench.action.decreaseViewSize')
-    endfor
-endfunction
+" if filereadable("~/.config/nvim/coc.vim")
+    " source ~/.config/nvim/coc.vim
+" endif
 
-function! s:vscodeCommentary(...) abort
-    if !a:0
-        let &operatorfunc = matchstr(expand('<sfile>'), '[^. ]*$')
-        return 'g@'
-    elseif a:0 > 1
-        let [line1, line2] = [a:1, a:2]
-    else
-        let [line1, line2] = [line("'["), line("']")]
-    endif
+" LSP config
+" function! s:on_lsp_buffer_enabled() abort
+    " setlocal omnifunc=lsp#complete
+    " setlocal signcolumn=yes
+    " if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+    " nmap <buffer> gd <plug>(lsp-definition)
+    " nmap <buffer> gs <plug>(lsp-document-symbol-search)
+    " nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+    " nmap <buffer> gr <plug>(lsp-references)
+    " nmap <buffer> gi <plug>(lsp-implementation)
+    " " nmap <buffer> gt <plug>(lsp-type-definition)
+    " nmap <buffer> <leader>rn <plug>(lsp-rename)
+    " nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+    " nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+    " nmap <buffer> K <plug>(lsp-hover)
+    " nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+    " nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
 
-    call VSCodeCallRange("editor.action.commentLine", line1, line2, 0)
-endfunction
+    " let g:lsp_format_sync_timeout = 1000
+    " autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
+    
+    " " refer to doc to add more commands
+" endfunction
 
-function! s:openVSCodeCommandsInVisualMode()
-    normal! gv
-    let visualmode = visualmode()
-    if visualmode == "V"
-        let startLine = line("v")
-        let endLine = line(".")
-        call VSCodeNotifyRange("workbench.action.showCommands", startLine, endLine, 1)
-    else
-        let startPos = getpos("v")
-        let endPos = getpos(".")
-        call VSCodeNotifyRangePos("workbench.action.showCommands", startPos[1], endPos[1], startPos[2], endPos[2], 1)
-    endif
-endfunction
+" augroup lsp_install
+    " au!
+    " " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    " autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+" augroup END
 
-command! -complete=file -nargs=? Split call <SID>split('h', <q-args>)
-command! -complete=file -nargs=? Vsplit call <SID>split('v', <q-args>)
-command! -complete=file -nargs=? New call <SID>split('h', '__vscode_new__')
-command! -complete=file -nargs=? Vnew call <SID>split('v', '__vscode_new__')
-command! -bang Only if <q-bang> == '!' | call <SID>closeOtherEditors() | else | call VSCodeNotify('workbench.action.joinAllGroups') | endif
+" Autocompletion
+" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+" imap <c-space> <Plug>(asyncomplete_force_refresh)
+
+" allow modifying the completeopt variable, or it will
+" be overridden all the time
+" let g:asyncomplete_auto_completeopt = 0
+
+" set completeopt=menuone,noinsert,noselect,preview
+ " Show hover
+nnoremap K <Cmd>lua vim.lsp.buf.hover()<CR>
+ " Jump to definition
+nnoremap gd <Cmd>lua vim.lsp.buf.definition()<CR>
+ " Open code actions using the default lsp UI, if you want to change this please see the plugins above
+nnoremap <leader>ca <Cmd>lua vim.lsp.buf.code_action()<CR>
+ " Open code actions for the selected visual range
+xnoremap <leader>ca <Cmd>lua vim.lsp.buf.range_code_action()<CR>
 
 " Basic
 set incsearch
 set ignorecase
+set splitright
+set splitbelow
+
+set tabstop=4
+set softtabstop=4
+set expandtab
+set shiftwidth=4
+
+set wildmode=longest,list
+syntax on
+
 set number relativenumber
 set nu rnu
 
@@ -126,31 +154,19 @@ nmap <leader>t <Plug>(easymotion-bd-t)
 nmap <leader>F <Plug>(easymotion-bd-f2)
 nmap <leader>e <Plug>(easymotion-bd-e)
 
-xmap gc  <Plug>VSCodeCommentary
-nmap gc  <Plug>VSCodeCommentary
-omap gc  <Plug>VSCodeCommentary
-nmap gcc <Plug>VSCodeCommentaryLine
 
-if exists('g:vscode')
-" Better Navigation
-nnoremap <silent> <C-j> :call VSCodeNotify('workbench.action.navigateDown')<CR>
-xnoremap <silent> <C-j> :call VSCodeNotify('workbench.action.navigateDown')<CR>
-nnoremap <silent> <C-k> :call VSCodeNotify('workbench.action.navigateUp')<CR>
-xnoremap <silent> <C-k> :call VSCodeNotify('workbench.action.navigateUp')<CR>
-nnoremap <silent> <C-h> :call VSCodeNotify('workbench.action.navigateLeft')<CR>
-xnoremap <silent> <C-h> :call VSCodeNotify('workbench.action.navigateLeft')<CR>
-nnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
-xnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
-nnoremap <silent> ge :call VSCodeNotify('editor.action.marker.nextInFiles')<CR>
-nnoremap <silent> gI :call VSCodeNotify('editor.action.goToImplementation')<CR>
-nnoremap <silent> gf :call VSCodeNotify('editor.action.openLink')<CR>
+" nerdcommenter
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+vnoremap gc <plug>NERDCommenterToggle
+nnoremap gcc <plug>NERDCommenterToggle
 
-nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
 
-" Bind C-/ to vscode commentary since calling from vscode produces double comments due to multiple cursors
-xnoremap <expr> <C-/> <SID>vscodeCommentary()
-nnoremap <expr> <C-/> <SID>vscodeCommentary() . '_'
-	" xnoremap <silent> <C-P> :<C-u>call <SID>openVSCodeCommandsInVisualMode()<CR>
-endif
+" fzf
+nmap <leader>p :call fzf#run({'sink': 'tabedit'})<CR>
+nmap <leader>h :call fzf#run({'sink': 'split'})<CR>
+nmap <leader>v :call fzf#run({'sink': 'vsplit'})<CR>
 
 set clipboard+=unnamedplus
+
+lua require('coc')
